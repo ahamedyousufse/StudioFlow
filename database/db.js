@@ -1,24 +1,24 @@
 // using the library sqlite3
-const sqlite3 = require('sqlite3');
+const sqlite3 = require("sqlite3");
 
 // const DB_SOURCE = "db.sqlite";
 
 // instantiating the object/instance "Database" || open the database connection
-const db = new sqlite3.Database('./database/studioflow.db', (err) => {
-    if(err){
-        // console.log("error connecting to database!"); -- needs improvement.
-        console.error(err.message); // this is a better approach and it helps in debugging.
-    } else {
-        console.log("connected to the database successfully!");
-        createTable();
-    }
+const db = new sqlite3.Database("./database/studioflow.db", (err) => {
+  if (err) {
+    // console.log("error connecting to database!"); -- needs improvement.
+    console.error(err.message); // this is a better approach and it helps in debugging.
+  } else {
+    console.log("connected to the database successfully!");
+    createTable();
+  }
 });
 
 // this function creates the table
-function createTable(){
-    const query = `
+function createTable() {
+  const query = `
         CREATE TABLE IF NOT EXISTS packages (
-            id INTEGER PRIMARY KEY UNIQUE,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL UNIQUE,
             price REAL NOT NULL,
             duration TEXT NOT NULL,
@@ -27,15 +27,72 @@ function createTable(){
         )
     `;
 
-    db.run(query, (err) => {
-        if (err) {
-            console.error(`error while creating table: ${err.message}`);
-        } else {
-            console.log("packages table created successfully!");
-        }
-    });
+  db.run(query, (err) => {
+    if (err) {
+      console.error(`error while creating table: ${err.message}`);
+    } else {
+      console.log("packages table created successfully!");
+      seedPackages();
+    }
+  });
+}
+
+// function to seed data to the table packages
+function seedPackages() {
+  db.get(`SELECT COUNT(*) AS count FROM packages`, [], (err, row) => {
+    if (err) {
+      return console.error(`error while checking row count`);
+    }
+
+    if (row.count === 0) {
+      console.log("seeding started...");
+
+      const packages = [
+        {
+          name: "gold",
+          price: "50000",
+          duration: "3 hours",
+          description: "upto 100 photos. delivery in 10 days. 1 review",
+        },
+        {
+          name: "silver",
+          price: "75000",
+          duration: "5 hours",
+          description: "upto 150 photos. delivery in 13 days. 2 reviews",
+        },
+        {
+          name: "platinum",
+          price: "100000",
+          duration: "8 hours",
+          description: "upto 300 photos. delivery in 15 days. 3 reviews",
+        },
+      ];
+
+      const insertQuery = `
+        INSERT INTO packages (name, price, duration, description) VALUES (?,?,?,?)
+      `;
+
+      packages.forEach((package) => {
+        db.run(
+          insertQuery,
+          [package.name, package.price, package.duration, package.description],
+          (err) => {
+            if(err){
+                console.error(`couldn't seed package: ${package.name}: ${err.message}`);
+            } else {
+                console.log(`seeded ${package.name} successfully!`);
+            }
+          },
+        );
+      });
+    } else {
+        console.log("database is not empty... skipping seeding...");
+    }
+  });
+}
+
+function readDatabase(){
+    
 }
 
 module.exports = db;
-
-
