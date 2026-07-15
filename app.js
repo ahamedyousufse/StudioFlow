@@ -1,8 +1,9 @@
 const express = require("express");// import the express module
 const cors = require("cors"); // import cors
+require("dotenv").config(); // import dotenv
 const db = require("./database/db"); // import database connection
 const packageRoutes = require("./routes/packageRoutes");
-require("dotenv").config(); // import dotenv
+
 
 const app = express(); // initialize express app
 
