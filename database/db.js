@@ -33,6 +33,7 @@ function createTable() {
     } else {
       console.log("packages table created successfully!");
       seedPackages();
+      // readDatabase();
     }
   });
 }
@@ -77,22 +78,35 @@ function seedPackages() {
           insertQuery,
           [package.name, package.price, package.duration, package.description],
           (err) => {
-            if(err){
-                console.error(`couldn't seed package: ${package.name}: ${err.message}`);
+            if (err) {
+              console.error(
+                `couldn't seed package: ${package.name}: ${err.message}`,
+              );
             } else {
-                console.log(`seeded ${package.name} successfully!`);
+              console.log(`seeded ${package.name} successfully!`);
             }
           },
         );
       });
     } else {
-        console.log("database is not empty... skipping seeding...");
+      console.log("database is not empty... skipping seeding...");
     }
   });
 }
 
-function readDatabase(){
-    
-}
+// function readDatabase() {
+//   db.all(`SELECT * FROM packages`, (err, rows) => {
+//     if (err) {
+//       console.log("error reading data!");
+//     } else {
+//       console.log("**************** CREATED PACKAGES ******************");
+//       rows.forEach((row) => {
+//         console.log(
+//           `package name: ${row.name}\nprice: ${row.price}\nduration: ${row.duration}\ndescription: ${row.description}\ncreated at: ${row.created_at}`,
+//         );
+//       });
+//     }
+//   });
+// }
 
 module.exports = db;
