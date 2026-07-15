@@ -77,11 +77,14 @@ const packageController = {
   deletePackage: (req, res) => {
     const packageId = req.params.id; // id of the package that is going to be deleted
 
-    packageModel.delete(packageId, (err) => {
+    packageModel.delete(packageId, function (err){
       if (err) {
         console.error("error deleting the package: ", err.message);
         return res.status(500).json({ error: err.message });
-      } else {
+      } else if (this.changes === 0){
+        res.status(404).json({error: "package not found"});
+      }
+      else {
         res.status(200).json({ message: "deleted package successfully" });
       }
     });
