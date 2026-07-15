@@ -61,11 +61,14 @@ const packageController = {
       req.params.id,
     ];
 
-    packageModel.update(packageData, (err) => {
+    packageModel.update(packageData, function (err) {
       if (err) {
         console.error("error updating package: ", err.message);
         return res.status(500).json({ error: "Internal Server Error" });
-      } else {
+      } else if (this.changes === 0) {
+        res.status(404).json({error: "pacakge id not found"});
+      }
+      else {
         res.status(200).json({ message: "Updated package successfully!" });
       }
     });
