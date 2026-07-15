@@ -26,20 +26,19 @@ const packageController = {
   },
 
   createPackage: (req, res) => {
+    const packageData = [req.body.name, req.body.price, req.body.duration, req.body.description];
+
     // query to insert new packages to the database
-    if (!req.body.name) {
+    if (!packageData[0]) {
       return res.status(400).json({ error: "name con not be empty!" });
-    } else if (req.body.price <= 0) {
+    } else if (packageData[1] <= 0) {
       return res.status(400).json({ error: "enter a valid price!" });
-    } else if (!req.body.duration) {
+    } else if (!packageData[2]) {
       return res.status(400).json({ error: "duration con not be empty!" });
     }
 
     packageModel.create(
-      req.body.name,
-      req.body.price,
-      req.body.duration,
-      req.body.description,
+      packageData,
       (err) => {
         if (err) {
           console.error("error creating package: ", err.message);
@@ -52,13 +51,9 @@ const packageController = {
   },
 
   updatePackage: (req, res) => {
-    const id = req.params.id;
-    const name = req.body.name;
-    const price = req.body.price;
-    const duration = req.body.duration;
-    const description = req.body.description;
+    const packageData = [req.body.name, req.body.price, req.body.duration, req.body.description, req.params.id];
 
-    packageModel.update(name, price, duration, description, id, (err) => {
+    packageModel.update(packageData, (err) => {
       if (err) {
         console.error("error updating package: ", err.message);
         return res.status(500).json({ error: "Internal Server Error" });

@@ -11,20 +11,20 @@ const packageModel = {
     db.get(sql, [id], callback);
   },
 
-  create: (name, price, duration, description, callback) => {
+  create: (packageData, callback) => {
     const sql = `INSERT INTO packages (name, price, duration, description) VALUES (?, ?, ?, ?)`;
     // function that execute the query on database
-    db.run(sql, [name, price, duration, description], callback);
+    db.run(sql, packageData, callback);
   },
 
-  update: (name, price, duration, description, id, callback) => {
+  update: (packageData, callback) => {
     // sql query to update packages by id
     const sql = `UPDATE packages
     SET name = ?, price = ?, duration = ?, description = ?
     WHERE id = ?
   `;
 
-    db.run(sql, [name, price, duration, description, id], callback);
+    db.run(sql, packageData, callback);
   },
 
   delete: (id, callback) => {
