@@ -8,10 +8,9 @@ const db = new sqlite3.Database("./database/studioflow.db", (err) => {
   if (err) {
     console.error(err.message); // this is a better approach and it helps in debugging.
   } else {
-    db.run('PRAGMA foreign_keys = ON;');
+    db.run("PRAGMA foreign_keys = ON;");
     console.log("connected to the database successfully!");
     createPackagesTable();
-    createBookingsTable();
   }
 });
 
@@ -31,11 +30,12 @@ function createPackagesTable() {
   db.run(query, (err) => {
     if (err) {
       console.error(`error while creating table: ${err.message}`);
-    } else {
-      console.log("packages table created successfully!");
-      seedPackages();
-      // readDatabase();
+      return;
     }
+
+    console.log("packages table created successfully!");
+    seedPackages();
+    createBookingsTable();
   });
 }
 
@@ -58,7 +58,7 @@ function createBookingsTable() {
   )`;
 
   db.run(query, (err) => {
-    if(err){
+    if (err) {
       console.error(`error creating bookings table: ${err.message}`);
     } else {
       console.log("bookings table has been created successfully");
