@@ -13,7 +13,7 @@ const packageController = {
 
   getPackageById: (req, res) => {
     const id = req.params.id;
-    // get pacakage by id
+    // get package by id
     packageModel.findById(id, (err, row) => {
       if (err) {
         console.error("error fetching package: ", err.message);
@@ -22,7 +22,7 @@ const packageController = {
       if (!row) {
         return res.status(404).json({ error: "package not found" });
       }
-      res.status(200).json({ package: row });
+      res.status(200).json({ data: row });
     });
   },
 
@@ -56,7 +56,7 @@ const packageController = {
         console.error("error updating package: ", err.message);
         return res.status(500).json({ error: "Internal Server Error" });
       } else if (this.changes === 0) {
-        res.status(404).json({ error: "pacakge id not found" });
+        res.status(404).json({ error: "package id not found" });
       } else {
         res.status(200).json({ message: "Updated package successfully!" });
       }
@@ -81,13 +81,13 @@ const packageController = {
 
 function validateInput(data, res){
   if (!data[0]) {
-      return res.status(400).json({ error: "name con not be empty!" });
+      return res.status(400).json({ error: "name cannot be empty!" });
     } else if (isNaN(data[1])) {
       return res.status(400).json({ error: "enter price in numbers" });
     } else if (data[1] <= 0) {
       return res.status(400).json({ error: "enter a valid price!" });
     } else if (!data[2]) {
-      return res.status(400).json({ error: "duration con not be empty!" });
+      return res.status(400).json({ error: "duration cannot be empty!" });
     }
 }
 

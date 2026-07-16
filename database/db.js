@@ -6,16 +6,17 @@ const sqlite3 = require("sqlite3");
 // instantiating the object/instance "Database" || open the database connection
 const db = new sqlite3.Database("./database/studioflow.db", (err) => {
   if (err) {
-    // console.log("error connecting to database!"); -- needs improvement.
     console.error(err.message); // this is a better approach and it helps in debugging.
   } else {
+    db.run('PRAGMA foreign_keys = ON;');
     console.log("connected to the database successfully!");
-    createTable();
+    createPackagesTable();
+    createBookingsTable();
   }
 });
 
-// this function creates the table
-function createTable() {
+// this function creates the table packages
+function createPackagesTable() {
   const query = `
         CREATE TABLE IF NOT EXISTS packages (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,6 +35,33 @@ function createTable() {
       console.log("packages table created successfully!");
       seedPackages();
       // readDatabase();
+    }
+  });
+}
+
+// creating bookings table
+function createBookingsTable() {
+  const query = `CREATE TABLE IF NOT EXISTS bookings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_name TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    email TEXT,
+    event_date TEXT NOT NULL,
+    venue TEXT NOT NULL,
+    notes TEXT,
+    status TEXT DEFAULT "Pending",
+    package_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(package_id)
+    REFERENCES packages(id)
+  )`;
+
+  db.run(query, (err) => {
+    if(err){
+      console.error(`error creating bookings table: ${err.message}`);
+    } else {
+      console.log("bookings table has been created successfully");
     }
   });
 }
