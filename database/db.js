@@ -47,7 +47,7 @@ function createBookingsTable() {
     phone TEXT NOT NULL,
     email TEXT,
     event_date TEXT NOT NULL,
-    venue TEXT NOT NULL,
+    venue TEXT NOT NULL, 
     notes TEXT,
     status TEXT DEFAULT "Pending",
     package_id INTEGER NOT NULL,
