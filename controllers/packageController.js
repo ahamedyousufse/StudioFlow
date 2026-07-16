@@ -31,53 +31,25 @@ const packageController = {
     const packageData = [name, price, duration, description];
 
     // validating user input
-    if (!name) {
-      return res.status(400).json({ error: "name con not be empty!" });
-    } else if (price <= 0) {
-      return res.status(400).json({ error: "enter a valid price!" });
-    } else if (isNaN(price)) {
-      return res.status(400).json({ error: "enter price in numbers" });
-    } else if (!duration) {
-      return res.status(400).json({ error: "duration con not be empty!" });
-    }
-
-    console.log(`package data is: ${packageData}`);
+    validateInput(packageData, res);
 
     packageModel.create(packageData, (err) => {
       if (err) {
         console.error("error creating package: ", err.message);
         return res.status(500).json({ error: "Internal Server Error" });
-      } 
+      }
 
       res.status(201).json({ message: "package created successfully" });
     });
   },
 
   updatePackage: (req, res) => {
-    // const packageData = [
-    //   req.body.name,
-    //   req.body.price,
-    //   req.body.duration,
-    //   req.body.description,
-    //   req.params.id,
-    // ];
-
     const id = req.params.id;
     const { name, price, duration, description } = req.body;
     const packageData = [name, price, duration, description, id];
 
     // validating user input
-    if (!name) {
-      return res.status(400).json({ error: "name con not be empty!" });
-    } else if (price <= 0) {
-      return res.status(400).json({ error: "enter a valid price!" });
-    } else if (isNaN(price)) {
-      return res.status(400).json({ error: "enter price in numbers" });
-    } else if (!duration) {
-      return res.status(400).json({ error: "duration con not be empty!" });
-    }
-
-    console.log(`package data is: ${packageData}`);
+    validateInput(packageData, res);
 
     packageModel.update(packageData, function (err) {
       if (err) {
@@ -104,7 +76,19 @@ const packageController = {
         res.status(200).json({ message: "deleted package successfully" });
       }
     });
-  },
+  }
 };
+
+function validateInput(data, res){
+  if (!data[0]) {
+      return res.status(400).json({ error: "name con not be empty!" });
+    } else if (isNaN(data[1])) {
+      return res.status(400).json({ error: "enter price in numbers" });
+    } else if (data[1] <= 0) {
+      return res.status(400).json({ error: "enter a valid price!" });
+    } else if (!data[2]) {
+      return res.status(400).json({ error: "duration con not be empty!" });
+    }
+}
 
 module.exports = packageController;
