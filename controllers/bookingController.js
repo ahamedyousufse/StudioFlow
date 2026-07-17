@@ -104,7 +104,7 @@ const bookingController = {
       venue,
       notes,
       package_id,
-      booking_id
+      booking_id,
     ];
 
     bookingModel.findById(booking_id, (err, row) => {
@@ -157,7 +157,20 @@ const bookingController = {
     });
   },
 
-  deleteBooking: (req, res) => {},
+  deleteBooking: (req, res) => {
+    const bookingId = req.params.id;
+
+    bookingModel.delete(bookingId, function (err) {
+      if (err) {
+        console.error(`error deleting booking: ${err.message}`);
+        return res.status(500).json({ error: "Internal Server Error" });
+      } else if (this.changes === 0) {
+        return res.status(404).json({ error: "booking not found" });
+      }
+
+      res.status(200).json({ message: "booking deleted successfully!" });
+    });
+  },
 };
 
 function validateInput(customer_name, phone, event_date, venue, package_id) {
