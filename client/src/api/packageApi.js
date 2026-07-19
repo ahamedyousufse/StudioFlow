@@ -7,3 +7,9 @@ export async function getPackages(){
 
     return response.data.data;
 }
+
+export async function postPackage(data){
+    const response = await axios.post(API_URL, data);
+
+    return response.status;
+}

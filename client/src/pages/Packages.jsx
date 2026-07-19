@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { getPackages } from "../api/packageApi";
 
+import PackageForm from "../components/PackageForm"
+
 function Packages() {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showForm, setshowForm] = useState(false);
 
   useEffect(() => {
     async function loadPackages() {
@@ -23,6 +26,14 @@ function Packages() {
     loadPackages();
   }, []);
 
+  function addPackage(){
+    setshowForm(true);
+  }
+
+  if(showForm){
+    return <PackageForm />
+  }
+
   if (loading) {
     return <div>Loading packages...</div>;
   }
@@ -32,7 +43,10 @@ function Packages() {
   }
   return (
     <div>
-      <h1 className="text-3xl font-bold">Packages</h1>
+      <div className="flex justify-around gap-15">
+        <h1 className="text-3xl font-bold w-10/12">Packages</h1>
+        <button className="bg-[#0A2947] text-white font-bold p-3 rounded-2xl" onClick={addPackage}>+ Add package</button>
+      </div>
       <div className="flex gap-6 mt-6">
         {packages.map((pack) => (
           <div
