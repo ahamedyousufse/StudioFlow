@@ -122,6 +122,22 @@ function seedPackages() {
   });
 }
 
+// db.run(`DELETE FROM bookings`, [], (err) => {
+//   if(err){
+//     console.log("error deleting data", err);
+//   } else {
+//     console.log("yeah boy!!!")
+//   } 
+// });
+
+// db.run(`DELETE FROM bookings`, [], (err) => {
+//   if(err){
+//     console.log("error deleting data", err);
+//   } else {
+//     console.log("yeah boy!!!")
+//   } 
+// });
+
 // function readDatabase() {
 //   db.all(`SELECT * FROM packages`, (err, rows) => {
 //     if (err) {

@@ -21,7 +21,7 @@ const bookingModel = {
 
   update: (bookingData, callback) => {
     const sql = `UPDATE bookings
-        SET customer_name = ?, phone = ?, email = ?, event_date = ?, venue = ?, notes = ?, package_id = ? 
+        SET customer_name = ?, phone = ?, email = ?, event_date = ?, venue = ?, notes = ?, status = ?, package_id = ?
         WHERE id = ?
     `;
 

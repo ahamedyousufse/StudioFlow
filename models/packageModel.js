@@ -11,6 +11,20 @@ const packageModel = {
     db.get(sql, [id], callback);
   },
 
+  findPackName: (id) => {
+    const sql = `SELECT name FROM packages WHERE id = ?`;
+    db.get(sql, [id], (err, row) => {
+      if(err){
+        return "not found"
+      } 
+      if (!row){
+        return "ho lee shi"
+      } 
+
+      return row.name;
+    })
+  },
+
   create: (packageData, callback) => {
     const sql = `INSERT INTO packages (name, price, duration, description) VALUES (?, ?, ?, ?)`;
     // function that execute the query on database

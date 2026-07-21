@@ -51,13 +51,13 @@ const bookingController = {
       package_id,
     ];
 
-    const error = validateInput(
+    const error = validateInput({
       customer_name,
       phone,
       event_date,
       venue,
-      package_id,
-    );
+      package_id
+    });
 
     if (error) {
       return res.status(400).json({ error });
@@ -93,7 +93,8 @@ const bookingController = {
       event_date,
       venue,
       notes,
-      package_id,
+      status,
+      package_id
     } = req.body;
 
     const bookingData = [
@@ -103,57 +104,56 @@ const bookingController = {
       event_date,
       venue,
       notes,
+      status,
       package_id,
-      booking_id,
+      booking_id
     ];
 
-    bookingModel.findById(booking_id, (err, row) => {
-      if (err) {
-        console.error(`error finding booking for update: ${err.message}`);
-        return res.status(500).json({ error: "Internal Server Error" });
-      }
-
-      if (!row) {
-        return res.status(404).json({ error: "booking doesn't exist" });
-      }
-    });
-
-    packageModel.findById(package_id, (err, row) => {
-      if (err) {
-        console.error(
-          `error finding package for booking updates: ${err.message}`,
-        );
-        return res.status(500).json({ error: "Internal Server Error" });
-      }
-
-      if (!row) {
-        return res.status(404).json({ error: "package doesn't exist" });
-      }
-    });
-
-    const error = validateInput(
+    const error = validateInput({
       customer_name,
       phone,
       event_date,
       venue,
       package_id,
-    );
+    });
 
     if (error) {
       return res.status(400).json({ error });
     }
 
-    bookingModel.update(bookingData, function (err) {
+    bookingModel.findById(booking_id, (err, bookingRow) => {
       if (err) {
-        console.error(`errro updating booking: ${err.message}`);
+        console.error(
+          `error finding booking for update: ${bookingRow.message}`,
+        );
         return res.status(500).json({ error: "Internal Server Error" });
       }
 
-      if (this.changes === 0) {
-        return res.status(500).json({ error: "couldn't udpate booking" });
+      if (!bookingRow) {
+        return res.status(404).json({ error: "booking doesn't exist" });
       }
 
-      res.status(201).json({ message: "booking updated successfully" });
+      packageModel.findById(package_id, (err, packageRow) => {
+        if (err) {
+          console.error(
+            `error finding package for booking updates: ${packageRow.message}`,
+          );
+          return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        if (!packageRow) {
+          return res.status(404).json({ error: "package doesn't exist" });
+        }
+
+        bookingModel.update(bookingData, function (err) {
+          if (err) {
+            console.error(`error updating booking: ${err.message}`);
+            return res.status(500).json({ error: "Internal Server Error" });
+          }
+
+          res.status(200).json({ message: "booking updated successfully" });
+        });
+      });
     });
   },
 
@@ -173,25 +173,25 @@ const bookingController = {
   },
 };
 
-function validateInput(customer_name, phone, event_date, venue, package_id) {
+function validateInput(data) {
   // validating customer name, phone, event date, venue, package id
   // phone validation should validate more parameters (eg. min lenght, max length etc..)
-  if (!customer_name) {
+  if (!data.customer_name) {
     return "name cannot be empty";
   }
-  if (!phone) {
+  if (!data.phone) {
     return "phone number cannot be empty";
   }
-  if (isNaN(phone)) {
+  if (isNaN(data.phone)) {
     return "enter phone number in numbers";
   }
-  if (!event_date) {
+  if (!data.event_date) {
     return "event date cannot be empty";
   }
-  if (!venue) {
+  if (!data.venue) {
     return "venue cannot be empty";
   }
-  if (!package_id) {
+  if (!data.package_id) {
     return "package id cannot be empty";
   }
 

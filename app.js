@@ -3,6 +3,7 @@ const cors = require("cors"); // import cors
 require("dotenv").config(); // import dotenv
 const db = require("./database/db"); // import database connection
 const packageRoutes = require("./routes/packageRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 
 
 const app = express(); // initialize express app
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api", packageRoutes);
+app.use("/api", bookingRoutes);
 
 // start the server
 app.listen(PORT, () => {
